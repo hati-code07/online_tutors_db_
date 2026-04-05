@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: online_tutors_db
+      POSTGRES_USER: online_tutors_db
+      POSTGRES_PASSWORD: "1111"
+    ports:
+      - "5434:5432"
+    volumes:
+      - online_tutors_db_data:/var/lib/postgresql/data
+
+  app:
+    image: online-tutors-db-app
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_USER: online_tutors_db
+      DB_PASSWORD: "1111"
+      DB_NAME: online_tutors_db
+      DB_PORT: 5432
+      NODE_ENV: development
+    stdin_open: true
+    tty: true
+
+volumes:
+  online_tutors_db_data:
+    driver: local

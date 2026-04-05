@@ -1,0 +1,30 @@
+{
+  "name": "online_tutors_db",
+  "version": "1.0.0",
+  "description": "REST API for an online tutors platform built with Express, Sequelize and PostgreSQL.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js && node --check app/models/index.js && node --check app/controllers/users.controller.js && node --check app/controllers/subjects.controller.js && node --check app/controllers/lessons.controller.js && node --check app/controllers/reviews.controller.js && node --check app/controllers/tutor_subject.controller.js && node --check app/routes/users.routes.js && node --check app/routes/subject.routes.js && node --check app/routes/lesson.routes.js && node --check app/routes/review.routes.js && node --check app/routes/tutor_subject.routes.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hati-code07/online_tutors_db_.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hati-code07/online_tutors_db_/issues"
+  },
+  "homepage": "https://github.com/hati-code07/online_tutors_db_#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
