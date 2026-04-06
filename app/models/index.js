@@ -32,6 +32,7 @@ db.subjects = require("./subjects.model.js")(sequelize, Sequelize);
 db.tutorSubjects = require("./tutor_subject.model.js")(sequelize, Sequelize);
 db.lessons = require("./lessons.model.js")(sequelize, Sequelize);
 db.reviews = require("./reviews.model.js")(sequelize, Sequelize);
+db.payments = require("./payments.model.js")(sequelize, Sequelize);
 
 db.users.hasMany(db.tutorSubjects, {
   foreignKey: "tutor_id",
@@ -99,6 +100,36 @@ db.reviews.belongsTo(db.users, {
 });
 
 db.reviews.belongsTo(db.users, {
+  foreignKey: "tutor_id",
+  as: "tutor"
+});
+
+db.lessons.hasMany(db.payments, {
+  foreignKey: "lesson_id",
+  as: "payments"
+});
+
+db.payments.belongsTo(db.lessons, {
+  foreignKey: "lesson_id",
+  as: "lesson"
+});
+
+db.users.hasMany(db.payments, {
+  foreignKey: "student_id",
+  as: "studentPayments"
+});
+
+db.users.hasMany(db.payments, {
+  foreignKey: "tutor_id",
+  as: "tutorPayments"
+});
+
+db.payments.belongsTo(db.users, {
+  foreignKey: "student_id",
+  as: "student"
+});
+
+db.payments.belongsTo(db.users, {
   foreignKey: "tutor_id",
   as: "tutor"
 });

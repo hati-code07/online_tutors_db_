@@ -135,6 +135,30 @@ function registerSwagger(app) {
               price_per_hour: { type: "number" }
             }
           },
+          Payment: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              lesson_id: { type: "integer" },
+              student_id: { type: "integer" },
+              tutor_id: { type: "integer" },
+              amount: { type: "number" },
+              status: { type: "string", enum: ["pending", "paid", "failed", "refunded"] },
+              paid_at: { type: "string", format: "date-time", nullable: true }
+            }
+          },
+          PaymentInput: {
+            type: "object",
+            required: ["lesson_id", "student_id", "tutor_id", "amount"],
+            properties: {
+              lesson_id: { type: "integer" },
+              student_id: { type: "integer" },
+              tutor_id: { type: "integer" },
+              amount: { type: "number" },
+              status: { type: "string", enum: ["pending", "paid", "failed", "refunded"] },
+              paid_at: { type: "string", format: "date-time" }
+            }
+          },
           MessageResponse: {
             type: "object",
             properties: {
@@ -165,6 +189,7 @@ function createApp() {
   require("./app/routes/lesson.routes")(app);
   require("./app/routes/review.routes")(app);
   require("./app/routes/tutor_subject.routes")(app);
+  require("./app/routes/payments.routes")(app);
 
   app.get("/", (req, res) => {
     res.json({ message: "Welcome to Online Tutors API." });

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "check": "node --check server.js && node --check app/models/index.js && node --check app/controllers/users.controller.js && node --check app/controllers/subjects.controller.js && node --check app/controllers/lessons.controller.js && node --check app/controllers/reviews.controller.js && node --check app/controllers/tutor_subject.controller.js && node --check app/routes/users.routes.js && node --check app/routes/subject.routes.js && node --check app/routes/lesson.routes.js && node --check app/routes/review.routes.js && node --check app/routes/tutor_subject.routes.js"
+    "check": "node --check server.js && node --check app/models/index.js && node --check app/controllers/users.controller.js && node --check app/controllers/subjects.controller.js && node --check app/controllers/lessons.controller.js && node --check app/controllers/reviews.controller.js && node --check app/controllers/tutor_subject.controller.js && node --check app/controllers/payments.controller.js && node --check app/routes/users.routes.js && node --check app/routes/subject.routes.js && node --check app/routes/lesson.routes.js && node --check app/routes/review.routes.js && node --check app/routes/tutor_subject.routes.js && node --check app/routes/payments.routes.js"
   },
   "repository": {
     "type": "git",
