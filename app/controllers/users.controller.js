@@ -91,3 +91,33 @@ exports.delete = (req, res) => {
     })
     .catch(err => res.status(500).send({ message: err.message }));
 };
+
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).send({ message: "Email and password required" });
+  }
+
+  try {
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(401).send({ message: "User not found" });
+    }
+
+    if (user.password_hash !== password) {
+      return res.status(401).send({ message: "Wrong password" });
+    }
+
+    const token = "user-" + user.id;
+
+    res.send({
+      token,
+      user: mapUser(user)
+    });
+
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};

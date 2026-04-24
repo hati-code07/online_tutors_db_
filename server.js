@@ -181,7 +181,15 @@ function createApp() {
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  const path = require('path');
 
+  // Статические файлы (HTML, CSS, JS)
+  app.use(express.static(path.join(__dirname, 'public')));
+
+  // Главная страница
+  app.get('/', (req, res) => {
+      res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
   registerSwagger(app);
 
   require("./app/routes/users.routes")(app);

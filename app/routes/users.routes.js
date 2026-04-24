@@ -97,12 +97,14 @@ module.exports = (app) => {
    *         description: User deleted
    */
 
+  router.post("/login", users.login);
   router.post("/", users.create);
   router.get("/", users.findAll);
   router.get("/raw/by-role", users.findByRoleRaw);
   router.get("/:id", users.findOne);
   router.put("/:id", users.update);
   router.delete("/:id", users.delete);
+  
 
   app.use("/api/users", router);
 };
