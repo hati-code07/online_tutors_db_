@@ -11,7 +11,7 @@ function TutorsPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingTutor, setEditingTutor] = useState(null);
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', phone: '', bio: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password_hash: '', phone: '', bio: '' });
 
   useEffect(() => {
     fetchTutors();
@@ -41,27 +41,48 @@ function TutorsPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Подготавливаем данные для отправки
+      const dataToSend = {
+        name: formData.name,
+        email: formData.email,
+        role: 'tutor',
+        phone: formData.phone || null,
+        bio: formData.bio || null
+      };
+      
+      // Добавляем пароль только для нового репетитора
+      if (!editingTutor) {
+        dataToSend.password_hash = formData.password_hash;
+      }
+      
       if (editingTutor) {
-        await axios.put(`${API}/users/${editingTutor.id}`, formData);
+        await axios.put(`${API}/users/${editingTutor.id}`, dataToSend);
         toast.success('Обновлено');
       } else {
-        await axios.post(`${API}/users`, { ...formData, role: 'tutor' });
+        await axios.post(`${API}/users`, dataToSend);
         toast.success('Добавлено');
       }
       setShowModal(false);
       fetchTutors();
     } catch (error) {
-      toast.error('Ошибка');
+      console.error('Ошибка:', error.response?.data);
+      toast.error(error.response?.data?.message || 'Ошибка сохранения');
     }
   };
 
   const openModal = (tutor = null) => {
     if (tutor) {
       setEditingTutor(tutor);
-      setFormData(tutor);
+      setFormData({
+        name: tutor.name || '',
+        email: tutor.email || '',
+        password_hash: '',
+        phone: tutor.phone || '',
+        bio: tutor.bio || ''
+      });
     } else {
       setEditingTutor(null);
-      setFormData({ name: '', email: '', password: '', phone: '', bio: '' });
+      setFormData({ name: '', email: '', password_hash: '', phone: '', bio: '' });
     }
     setShowModal(true);
   };
@@ -113,14 +134,49 @@ function TutorsPage() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-md">
             <h3 className="text-xl font-bold mb-4">{editingTutor ? 'Редактировать' : 'Добавить'} репетитора</h3>
             <form onSubmit={handleSubmit}>
-              <input type="text" placeholder="Имя" className="w-full p-3 border rounded-lg mb-3" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
-              <input type="email" placeholder="Email" className="w-full p-3 border rounded-lg mb-3" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required />
-              <input type="password" placeholder="Пароль" className="w-full p-3 border rounded-lg mb-3" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} required={!editingTutor} />
-              <input type="tel" placeholder="Телефон" className="w-full p-3 border rounded-lg mb-3" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
-              <textarea placeholder="О себе" className="w-full p-3 border rounded-lg mb-3" rows="3" value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} />
+              <input 
+                type="text" 
+                placeholder="Имя *" 
+                className="w-full p-3 border rounded-lg mb-3" 
+                value={formData.name} 
+                onChange={e => setFormData({...formData, name: e.target.value})} 
+                required 
+              />
+              <input 
+                type="email" 
+                placeholder="Email *" 
+                className="w-full p-3 border rounded-lg mb-3" 
+                value={formData.email} 
+                onChange={e => setFormData({...formData, email: e.target.value})} 
+                required 
+              />
+              {!editingTutor && (
+                <input 
+                  type="password" 
+                  placeholder="Пароль *" 
+                  className="w-full p-3 border rounded-lg mb-3" 
+                  value={formData.password_hash} 
+                  onChange={e => setFormData({...formData, password_hash: e.target.value})} 
+                  required 
+                />
+              )}
+              <input 
+                type="tel" 
+                placeholder="Телефон" 
+                className="w-full p-3 border rounded-lg mb-3" 
+                value={formData.phone} 
+                onChange={e => setFormData({...formData, phone: e.target.value})} 
+              />
+              <textarea 
+                placeholder="О себе" 
+                className="w-full p-3 border rounded-lg mb-3" 
+                rows="3" 
+                value={formData.bio} 
+                onChange={e => setFormData({...formData, bio: e.target.value})} 
+              />
               <div className="flex space-x-3">
-                <button type="submit" className="flex-1 bg-indigo-600 text-white py-2 rounded-lg">Сохранить</button>
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 bg-gray-200 py-2 rounded-lg">Отмена</button>
+                <button type="submit" className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Сохранить</button>
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 bg-gray-200 py-2 rounded-lg hover:bg-gray-300">Отмена</button>
               </div>
             </form>
           </div>
